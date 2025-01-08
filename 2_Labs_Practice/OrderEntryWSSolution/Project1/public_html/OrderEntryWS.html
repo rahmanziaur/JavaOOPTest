@@ -1,0 +1,55 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252"></META>
+<TITLE>Title</TITLE>
+<SCRIPT LANGUAGE="Javascript">
+  var javawsInstalled = 0;
+  isIE = "false";
+  if (navigator.mimeTypes && navigator.mimeTypes.length)
+  {
+    x = navigator.mimeTypes['application/x-java-jnlp-file']; 
+    if (x) javawsInstalled = 1;  
+  }
+  else
+  {
+    isIE = "true";  
+  }
+  function insertLink(url, name) 
+  {
+    if (javawsInstalled) 
+    {
+      document.write("<a href=" + url + ">"  + name + "</a>");    
+    }
+    else
+    {
+      document.write("Need to install Java Web Start"); 
+    }
+  }
+</SCRIPT>
+<SCRIPT LANGUAGE="VBScript">
+on error resume next 
+If isIE = "true" Then 
+  If Not(IsObject(CreateObject("JavaWebStart.IsInstalled"))) Then
+    javawsInstalled = 0 
+  Else 
+    javawsInstalled = 1 
+End If 
+  If Not(IsObject(CreateObject("JavaWebStart.isInstalled.2"))) Then
+     javaws12Installed = 0
+  Else
+     javaws12Installed = 1
+  End If
+  If Not(IsObject(CreateObject("JavaWebStart.isInstalled.1.4.2.0"))) Then
+     javaws142Installed = 0
+  Else
+     javaws142Installed = 1
+  End If  
+End If 
+</SCRIPT>
+</HEAD>
+<BODY>
+<SCRIPT LANGUAGE="Javascript">
+insertLink("OrderEntryWS.jnlp", "Click here to start your Web Start Application")
+</SCRIPT>
+</BODY>
+</HTML>

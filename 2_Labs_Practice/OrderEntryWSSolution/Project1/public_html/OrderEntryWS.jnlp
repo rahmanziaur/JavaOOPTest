@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'windows-1252'?>
+<jnlp spec="1.0+" codebase="http://localhost:8888" href="/OrderEntryWorkspaceLesWS-Project1-context-root/OrderEntryWS.jnlp">
+   <information>
+      <title>Order Entry WebStart Application</title>
+      <vendor>Curriculum Development</vendor>
+      <homepage href="OrderEntryWS.html"/>
+      <description>Oracel Java Programming course</description>
+      <offline-allowed/>
+   </information>
+   <resources>
+      <j2se version="1.4+"/>
+      <jar href="/OrderEntryWorkspaceLesWS-Project1-context-root/apps/archive1.jar" main="true" download="eager"/>
+   </resources>
+   <application-desc main-class="oe.OrderEntry"/>
+</jnlp>

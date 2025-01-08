@@ -1,0 +1,5 @@
+IT13001 Ariful 3.4
+IT13002 Nishan 3.49
+IT13003 Zahid 2.78
+IT13004 Rafique 3.24
+IT13005 Fahad 3.23

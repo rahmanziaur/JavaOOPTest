@@ -1,0 +1,17 @@
+    else
+    {
+      customer = (Customer) findBtn.showList();
+      if (customer != null)
+      {
+        order.setCustomer(customer);
+        custIdTxt.setText(Integer.toString(customer.getId()));
+        custNameTxt.setText(customer.getName());
+        custAddressTxt.setText(customer.getAddress());
+        custPhoneTxt.setText(customer.getPhone());
+      }
+      else
+      {
+        JOptionPane.showMessageDialog(this, "Please enter an Customer Id",
+           "Error", JOptionPane.ERROR_MESSAGE);
+      }
+    }

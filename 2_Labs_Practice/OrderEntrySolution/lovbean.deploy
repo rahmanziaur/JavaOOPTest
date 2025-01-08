@@ -1,0 +1,30 @@
+<?xml version = '1.0' encoding = 'windows-1252'?>
+<simple-archive-deployment xmlns="http://xmlns.oracle.com/jdeveloper/902/deploy/jar" nselem="simple-archive-deployment" class="oracle.jdeveloper.deploy.jar.ArchiveProfile">
+   <archiveOptions>
+      <additionalManifests/>
+      <compressed>false</compressed>
+      <hasManifest>true</hasManifest>
+      <mainClass/>
+   </archiveOptions>
+   <cdaSettings>
+      <additionalArchives/>
+      <afterFilters/>
+      <beforeFilters/>
+      <duringFilters/>
+      <selectedArchives>
+         <archives/>
+         <selectionMode>0</selectionMode>
+      </selectedArchives>
+   </cdaSettings>
+   <jarURL path="lovbean.jar"/>
+   <profileDeps/>
+   <selectedProjectFiles>
+      <autoInclude>false</autoInclude>
+      <deploySourceAs>0</deploySourceAs>
+      <files>
+         <Item path="src/oe/LOVButton.java"/>
+         <Item path="src/oe/LOVButtonBeanInfo.java"/>
+      </files>
+      <selectionFilters/>
+   </selectedProjectFiles>
+</simple-archive-deployment>

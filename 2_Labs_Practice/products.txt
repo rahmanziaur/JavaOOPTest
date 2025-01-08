@@ -1,0 +1,70 @@
+H|32MB Cache /M|32MB Mirrored cache memory (100-MHz Registered SDRAM)|123.00
+H|32MB Cache /NM|32MB Non-Mirrored cache memory|121.00
+H|64MB Cache /M|64MB Mirrored cache memory|223.00
+H|8MB Cache /NM|8MB Non-Mirrored Cache Memory (100-MHz Registered SDRAM)|89.00
+H|DIMM - 16 MB|Citrus OLX DIMM - 16 MB capacity.|124.00
+H|DIMM - 1GB|Memory DIMM: RAM - 1 GB capacity.|599.00
+H|DIMM - 256MB|Memory DIMM: RAM 256 MB. (100-MHz Registered SDRAM)|337.00
+H|DIMM - 2GB|Memory DIMM: RAM, 2 GB capacity.|699.00
+H|DIMM - 32MB|32 MB DIMM Memory upgrade|128.00
+H|DIMM - 64MB|Memory DIMM: RAM, 64MB (100-MHz Unregistered ECC SDRAM)|247.00
+H|RAM - 16 MB|Memory SIMM: RAM - 16 MB capacity.|135.00
+H|RAM - 32 MB|Memory SIMM: RAM - 32 MB capacity.|161.00
+H|RAM - 48 MB|Random Access Memory, SIMM - 48 MB capacity.|193.00
+H|MB - S300|PC type motherboard, 300 Series.|55.00
+H|MB - S450|PC type motherboard, 450 Series.|66.00
+H|MB - S500|PC type motherboard, 500 Series.|77.00
+H|MB - S550|PC type motherboard for the 550 Series.|88.00
+H|MB - S600|Motherboard, 600 Series.|99.00
+H|MB - S900/650+|PC motherboard, 900 Series; standard motherboard for all models 650 and up.|101.00
+H|Video Card /32|Video Card, with 32MB cache memory.|48.00
+H|Video Card /E32|3-D ELSA Video Card, with 32 MB memory.|58.00
+H|WSP DA-130|Wide storage processor DA-130 for storage subunits.|299.00
+H|WSP DA-290|Wide storage processor (model DA-290).|399.00
+H|CD-ROM 500/16x|CD drive, read only, speed 16x, maximum capacity 500 MB.|101.00
+H|CD-ROM 600/E/24x|600 MB external 24x speed CD-ROM drive (read only).|127.00
+H|CD-ROM 600/I/24x|600 MB internal read only CD-ROM drive, reading speed 24x|117.00
+H|CD-ROM 600/I/32x|600 MB Internal CD-ROM Drive, speed 32x (read only).|134.00
+H|CD-ROM 8x|CD Writer, read only, speed 8x|99.00
+H|CDW 20/48/E|CD Writer, read 48x, write 20x|233.00
+H|CDW 20/48/I|CD-ROM drive: read 20x, write 48x (internal)|223.00
+H|DFD 1.44/3.5|Dual Floppy Drive - 1.44 MB - 3.5|67.00
+H|DVD 12x|DVD-ROM drive: speed 12x|333.00
+H|DVD 8x|DVD - ROM drive, 8x speed. Will probably become obsolete pretty soon...|274.00
+H|FD 1.44/3.5|Floppy Drive - 1.44 MB High Density capacity - 3.5 inch chassis|39.00
+H|FD 1.44/3.5/E|Floppy disk drive - 1.44 MB (high density) capacity - 3.5 inch (external)|42.00
+H|Modem - C/100|DOCSIS/EURODOCSIS 1.0/1.1-compliant external cable modem|65.00
+H|TD 12GB/DAT|Tape drive - 12 gigabyte capacity, DAT format.|134.00
+H|TD 7GB/8|Tape drive, 7GB capacity, 8mm cartridge tape.|210.00
+H|ZIP 100|ZIP Drive, 100 MB capacity (external) plus cable for parallel port connection|98.00
+S|SPNIX3.3 - DL|Operating System Software: SPNIX V3.3 - Additional developer license.|60.00
+S|SPNIX3.3 - UL/A|Operating System Software: SPNIX V3.3 - Additional user license class A.|50.00
+S|SPNIX3.3 - UL/C|Operating System Software: SPNIX V3.3 - Additional user license class C.|50.00
+S|SPNIX3.3 - UL/D|Operating System Software: SPNIX V3.3 - Additional user license class D.|55.00
+S|SPNIX3.3 - NL|Operating System Software: SPNIX V3.3 - Additional network access license.|55.00
+S|SPNIX4.0 - DL|Operating System Software: SPNIX V4.0 - Additional developer license.|100.00
+S|SPNIX4.0 - UL/A|Operating System Software: SPNIX V4.0 - Additional user license class A.|70.00
+S|SPNIX4.0 - UL/D|Operating System Software: SPNIX V4.0 - Additional user license class D.|80.00
+S|SPNIX4.0 - UL/C|Operating System Software: SPNIX V4.0 - Additional user license class C.|75.00
+S|SPNIX4.0 - NL|Operating System Software: SPNIX V4.0 - Additional network access license.|80.00
+S|SPNIX3.3 SU|Operating System Software: SPNIX V3.3 - Base Server License Upgrade to V4.0.|500.00
+S|SPNIX3.3 AU|Operating System Software: SPNIX V3.3 - V4.0 upgrade; class A user.|45.00
+S|SPNIX3.3 C/DU|Operating System Software: SPNIX V3.3 - V4.0 upgrade; class C or D user.|25.00
+S|SPNIX3.3 NU|Operating System Software: SPNIX V3.3 - V4.0 upgrade; network access license.|25.00
+S|SPNIX3.3 DU|Operating System Software: SPNIX V3.3 - V4.0 upgrade; developer license.|65.00
+S|C for SPNIX3.3 - 1 Seat|C programming software for SPNIX V3.3 - single user|62.00
+S|C for SPNIX3.3 - Doc|C programming language documentation, SPNIX V3.3|128.00
+S|C for SPNIX3.3 - Sys|C programming software for SPNIX V3.3 - system compiler, libraries, linker|450.00
+S|C for SPNIX4.0 - Doc|C programming language documentation, SPNIX V4.0|146.00
+S|C for SPNIX4.0 - 1 Seat|C programming software for SPNIX V4.0 - single user|84.00
+S|C for SPNIX4.0 - Sys|C programming software for SPNIX V4.0 - system compiler, libraries, linker|555.00
+S|C for SPNIX3.3 - Seat/U|C programming software for SPNIX V3.3 - 4.0 Upgrade - single user|22.00
+S|Base ISO CP - BL|Base ISO Communication Package - Base License|110.00
+S|Client ISO CP - S|ISO Communication Package add-on license for additional SPNIX V3.3 client.|27.00
+S|OSI 8-16/IL|OSI Layer 8 to 16 - Incremental License|128.00
+S|X25 - 1 Line License|X25 network access control system, single user|25.00
+S|IC Browser - S|IC Web Browser for SPNIX. Browser with network mail capability.|90.00
+S|Client ISO CP - S|ISO Communication Package add-on license for additional SPNIX V4.0 client.|41.00
+S|Client ISO CP - V|ISO Communication Package add-on license for additional Vision client.|33.00
+S|OSI 1-4/IL|OSI Layer 1 to 4 - Incremental License|83.00
+S|IC Browser - V|IC Web Browser for Vision with manual. Browser with network mail capability.|75.00

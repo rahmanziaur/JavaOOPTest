@@ -1,0 +1,13 @@
+<?xml version = '1.0'?>
+<!DOCTYPE connections>
+<connections>
+   <connection>
+      <ConnectionName>oc4j</ConnectionName>
+      <URL>ormi://gallus-cpq/</URL>
+      <ConnectionType>OC4J</ConnectionType>
+      <user>admin</user>
+      <JNDI_INITIAL_CONTEXT_FACTORY>com.evermind.server.rmi.RMIInitialContextFactory</JNDI_INITIAL_CONTEXT_FACTORY>
+      <OC4J_HOME>E:\jdev9i_903_base\j2ee\home</OC4J_HOME>
+      <TARGET_NODE>http-web-site</TARGET_NODE>
+   </connection>
+</connections>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE application-server PUBLIC "-//Evermind//DTD Orion Application-server//EN" "http://xmlns.oracle.com/ias/dtds/application-server.dtd">
+
+<application-server application-directory="../applications"
+ deployment-directory="../application-deployments"
+ connector-directory="../connectors"
+>
+	<rmi-config path="./rmi.xml" />
+	<jms-config path="./jms.xml" />
+	<log>
+		<file path="../log/server.log" />
+	</log>
+	<transaction-config timeout="30000" />
+	<global-application name="default" path="application.xml" />
+	<application name="bc4j" path="../../../BC4J/redist/bc4j.ear" auto-start="true" />
+	<application name="OrderEntryApplet" path="../applications/_OrderEntryApplet.ear" auto-start="true" />
+	<global-web-app-config path="global-web-application.xml" />
+	<web-site default="true" path="./default-web-site.xml" />
+	<web-site path="./http-web-site.xml" />
+	<cluster id="-2045710326" />
+</application-server>

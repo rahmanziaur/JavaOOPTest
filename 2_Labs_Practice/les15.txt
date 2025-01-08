@@ -1,0 +1,112 @@
+// Code for Step 15-2 1b.
+
+  private void initOrder() {
+    order = new Order();
+    orderIdTxt.setText(Integer.toString(order.getId()));
+    orderDateLbl.setText(Util.toDateString(order.getOrderDate()));
+    orderTotalLbl.setText(Util.toMoney(order.getOrderTotal()));
+  }
+
+
+// Code for Step 15-2 1d.
+
+  private static int x = 0;
+  private static int y = 0;
+  private static final int OFFSET = 20;
+  private static final int MAX_OFFSET = 200;
+
+  private void setBounds() {
+    this.setResizable(true);
+    this.setBounds(x, y, this.getWidth(), this.getHeight());
+    x = (x + OFFSET) % MAX_OFFSET;
+    y = (y + OFFSET) % MAX_OFFSET;
+  }
+
+// Code for Step 15-2 1f.
+
+  public void setActive(boolean active) {
+    try {
+      this.setSelected(active);
+    }
+    catch (Exception e) {}
+    this.setVisible(active);
+    if (active)
+    {
+      this.toFront();
+    }
+  }
+
+// Code for Step 15-2 3b.
+
+  void findBtn_actionPerformed(ActionEvent e)
+  {
+    int custId = 0;
+    Customer customer = null;
+
+    if (custIdTxt.getText().length() > 0)
+    {
+      try
+      {
+        custId = Integer.parseInt(custIdTxt.getText());
+        customer = DataMan.findCustomerById(custId);
+        order.setCustomer(customer);
+        custNameTxt.setText(customer.getName());
+        custAddressTxt.setText(customer.getAddress());
+        custPhoneTxt.setText(customer.getPhone());
+      }
+      catch (NumberFormatException err)
+      {
+        JOptionPane.showMessageDialog(this,
+          "The Customer Id: " + err.getMessage() + " is not a valid number",
+          "Error", JOptionPane.ERROR_MESSAGE);
+        custIdTxt.setText("");
+      }
+      catch (NotFoundException err)
+      {
+        JOptionPane.showMessageDialog(this, err.getMessage(),
+          "Error", JOptionPane.ERROR_MESSAGE);
+        custIdTxt.setText("");        
+      }
+    }
+    else
+    {
+      JOptionPane.showMessageDialog(this,
+        "Please enter a Customer Id",
+        "Error", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+// Code for Step 15-2 4a.
+
+  void addBtn_actionPerformed(ActionEvent e)
+  {
+    Product p = null;
+    int prodId = 0;
+
+    if (prodIdTxt.getText().length() > 0)
+    {
+      try
+      {
+        prodId = Integer.parseInt(prodIdTxt.getText());
+        p = DataMan.findProductById(prodId);
+        order.addOrderItem(prodId);
+        orderTotalLbl.setText(Util.toMoney(order.getOrderTotal()));
+      }
+      catch (Exception err)
+      {
+        String message = err.getMessage();
+        if (err instanceof NumberFormatException)
+        {
+          message = "Product Id '" + message + "' is not a valid number";
+        }
+        JOptionPane.showMessageDialog(this, message,
+                                      "Error", JOptionPane.ERROR_MESSAGE);
+        prodIdTxt.setText("");
+      }
+    }
+    else
+    {
+      JOptionPane.showMessageDialog(this, "Please enter a Product Id",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+    }
+  }

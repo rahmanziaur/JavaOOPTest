@@ -1,0 +1,126 @@
+package oe;
+
+public class Util 
+{
+  public static boolean isLeapYear(int year)
+  {
+    return (year % 4 == 0) &&
+           ((year% 100 != 0) || (year % 400 == 0));
+  }
+
+  public static int lastDayInMonth(int month, int year)
+  {
+    int daysInMonth = 0;
+
+    switch (month)
+    {
+      case 1:
+      case 3:
+      case 5:
+      case 7:
+      case 8:
+      case 10:
+      case 12:
+        daysInMonth = 31;
+        break;
+      case 2:
+        daysInMonth = isLeapYear(year) ? 29 : 28;
+        break;
+      case 4:
+      case 6:
+      case 9:
+      case 11:
+        daysInMonth = 30;
+        break;
+    }
+    return daysInMonth;
+  }
+
+  public static int getDaysToShip(char region)
+  {
+    int daysToShip = 1;
+    switch (region)
+    {
+      case 'A':
+        daysToShip = 3;
+        break;
+      case 'E':
+        daysToShip = 5;
+        break;
+      case 'P':
+        daysToShip = 7;
+        break;
+    }
+    return daysToShip;
+  }
+
+  public static void main(String[] args)
+  {
+    int year = 1900;
+    System.out.println("Year: " + year + " leap year? " + isLeapYear(year));
+    year = 1964;
+    System.out.println("Year: " + year + " leap year? " + isLeapYear(year));
+    year = 1967;
+    System.out.println("Year: " + year + " leap year? " + isLeapYear(year));
+    year = 1984;
+    System.out.println("Year: " + year + " leap year? " + isLeapYear(year));
+    year = 1996;
+    System.out.println("Year: " + year + " leap year? " + isLeapYear(year));
+    year = 1997;
+    System.out.println("Year: " + year + " leap year? " + isLeapYear(year));
+    year = 2000;
+    System.out.println("Year: " + year + " leap year? " + isLeapYear(year));
+    year = 2001;
+    System.out.println("Year: " + year + " leap year? " + isLeapYear(year));
+
+    int day = 27;
+    int month = 1;
+    year = 2002;
+
+    int daysInMonth = lastDayInMonth(month, year);
+    System.out.println("Date is: " + day + "/" + month + "/" + year +
+                       " (and has " + daysInMonth + " days in the month)");
+    day = 20;
+    month = 2;
+    year = 2000;
+    daysInMonth = lastDayInMonth(month, year);
+    System.out.println("Date is: " + day + "/" + month + "/" + year +
+                       " (and has " + daysInMonth + " days in the month)");
+/*
+**  Remove comments to test with month 13.
+**
+    month = 13;
+    daysInMonth = lastDayInMonth(month, year);
+    System.out.println("Date is: " + day + "/" + month + "/" + year +
+                       " (and has " + daysInMonth + " days in the month)");
+*/
+    int daysToShip = getDaysToShip('A');
+    System.out.println("It takes " + daysToShip + " days to ship to Americas");
+
+    day = 27;
+    month = 1;
+    year = 2002;
+
+    daysInMonth = lastDayInMonth(month, year);
+/*
+**  Solution to 4b.
+    for (int aDay = day; aDay <= daysInMonth; aDay++)
+    {
+      System.out.println(aDay + "/" + month + "/" + year);
+    }
+*/
+    day = 10; 
+    month = 2;
+/*
+**  4e. with 'E' or 'P'
+    daysToShip = getDaysToShip('E');
+    daysToShip = getDaysToShip('P');
+*/
+    for (int aDay = day, j = 0; aDay <= daysInMonth && j < daysToShip; aDay++, j++)
+    {
+      System.out.println(aDay + "/" + month + "/" + year);
+    }
+
+
+  }
+}

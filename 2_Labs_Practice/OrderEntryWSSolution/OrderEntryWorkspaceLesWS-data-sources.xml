@@ -1,0 +1,6 @@
+<?xml version = '1.0' encoding = 'windows-1252'?>
+<!DOCTYPE data-sources PUBLIC "Orion data-sources" "http://xmlns.oracle.com/ias/dtds/data-sources.dtd">
+<data-sources>
+  <data-source name="jdev-connection-oe" class="com.evermind.sql.DriverManagerDataSource" location="jdbc/oeCoreDS" xa-location="jdbc/xa/oeXADS" ejb-location="jdbc/oeDS" pooled-location="jdbc/oePooledDS" connection-driver="oracle.jdbc.driver.OracleDriver" username="oe" password="oracle" url="jdbc:oracle:thin:@localhost:1521:oe" inactivity-timeout="30"/>
+  <data-source name="jdev-connection-hr" class="com.evermind.sql.DriverManagerDataSource" location="jdbc/hrCoreDS" xa-location="jdbc/xa/hrXADS" ejb-location="jdbc/hrDS" pooled-location="jdbc/hrPooledDS" connection-driver="oracle.jdbc.driver.OracleDriver" username="hr" password="hr" url="jdbc:oracle:thin:@localhost:1521:oe" inactivity-timeout="30"/>
+</data-sources>

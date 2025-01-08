@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<ModelersMap class="java.util.HashMap">
+   <Item>
+      <Key>36c683a6-00fb-1000-8903-c0a80166e596</Key>
+      <Value class="[Ljava.lang.String;">
+         <Item>oe</Item>
+         <Item/>
+         <Item>UMLPackage</Item>
+      </Value>
+   </Item>
+   <Item>
+      <Key>36c683d8-00fb-1000-8904-c0a80166e596</Key>
+      <Value class="[Ljava.lang.String;">
+         <Item>oe.UML Class Diagram1</Item>
+         <Item>oxd_ana</Item>
+         <Item>Diagram</Item>
+      </Value>
+   </Item>
+</ModelersMap>

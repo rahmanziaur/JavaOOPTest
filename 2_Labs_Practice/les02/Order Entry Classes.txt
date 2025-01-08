@@ -1,0 +1,108 @@
+Class:  Customer
+Description:  Represents a company or person who purhaces products
+  Attributes:
+    id
+    name
+    address
+    phone
+  Methods:
+    setId()
+    getId()
+    setName()
+    getName()
+    setAddress()
+    getAddress()
+    setPhone()
+    getPhone()
+----------------------
+Class: Order
+Description:  Represents an order for a customer, containing up to 10 items
+  Attributes:
+    id
+    orderDate
+    shipMode
+    orderTotal
+    status
+    // Associations (References)
+    customer
+    items
+  Methods:
+    getId()
+    setId()
+    getOrderDate()
+    setOrderDate()
+    getShipMode()
+    setShipMode()
+    getOrderTotal()
+    setOrderTotal()
+    getStatus()
+    setStatus()
+    // Additional methods
+    setCustomer()
+    getCustomer()
+    addItem()
+    removeItem()
+----------------------
+Class: OrderItem
+Description:  Represents an order line item for a specified quantity of a product
+  Attributes:
+    lineNbr
+    quantity
+    unitPrice
+    // Associations (references)
+    product
+  Methods:
+    getLineNbr()
+    setLineNbr()
+    getQuantity()
+    setQuantity()
+    getUnitPrice()
+    setUnitPrice()
+    // Additional methods
+    setProduct()
+    getProduct()
+----------------------
+Class: Product
+Description:  Represents a specific product being ordered
+  Attributes:
+    id
+    name
+    description
+    listPrice
+    warrantyPeriod
+    category
+  Methods:
+    getId()
+    setId()
+    getName()
+    setName()
+    getDescription()
+    setDescription()
+    getListPrice();
+    setListPrice();  
+    getWarrantyPeriod()
+    setWarrantyPeriod()
+    getCategory()
+    setCategory()
+
+If You have time Classes
+----------------------
+Class: Company  (extends Customer)
+Description:  A variation of a customer representing a company 
+  Attributes:
+    contact
+    discount
+  Methods:
+    getContact()
+    setContact()
+    getDiscount()
+    setDiscount()
+
+----------------------
+Class: Individual (extends Customer)
+Description:  A variation of a customer representing an individual.
+  Attributes:
+    licNumber
+  Methods:
+    getLicNumber()
+    setLicNumber()

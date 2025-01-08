@@ -1,0 +1,19 @@
+/**
+ * Created by Monir on 10/2/16.
+ */
+ public class WriteDataWithAutoClose {
+     public static void main(String[] args) throws Exception {
+         java.io.File file = new java.io.File("files/scores.txt");
+         /*if (file.exists()) {
+             System.out.println("File already exists");
+             System.exit(0);
+             }*/
+         try (java.io.PrintWriter output = new java.io.PrintWriter(file);) {
+             // Write formatted output to the file
+             output.print("John T Smith ");
+             output.println(90);
+             output.print("Eric K Jones ");
+             output.println(85);
+             }
+         }
+     }

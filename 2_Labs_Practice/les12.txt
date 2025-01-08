@@ -1,0 +1,5 @@
+products.add(new Hardware("SDRAM - 128 MB", null, 299.0));
+products.add(new Hardware("GP 800x600", null, 48.0));
+products.add(new Software("Spreadsheet-SSP/V2.0", null, 45.0));
+products.add(new Software("Word Processing-SWP/V4.5", null, 65.0));
+products.add(new Manual("Manual-Vision OS/2x +", null, 125.0));
