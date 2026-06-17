@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ICT-2208 · Object-Oriented Design Patterns</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ─── tokens ─────────────────────────────────────────────── */
+:root{
+  --bg:#ffffff;
+  --surface:#faf7f7;
+  --surface2:#f3eded;
+  --border:#e8d8d8;
+  --accent:#9B2E2B;      /* crimson brand */
+  --accent-light:#c0403c; /* hover variant */
+  --accent2:#6d1e1c;     /* deep crimson */
+  --warn:#b45309;
+  --text:#1a0e0e;
+  --muted:#7a5c5c;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'Inter',sans-serif;
+  --display:'Syne',sans-serif;
+  --radius:10px;
+  --badge-r:5px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7;min-height:100vh}
+
+/* ─── scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ─── layout ─────────────────────────────────────────────── */
+.shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+@media(max-width:780px){.shell{grid-template-columns:1fr}}
+
+/* ─── sidebar ────────────────────────────────────────────── */
+nav{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--surface);border-right:1px solid var(--border);padding:28px 0 40px;display:flex;flex-direction:column;gap:0}
+@media(max-width:780px){nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}}
+.nav-brand{padding:0 22px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.nav-brand .course-code{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase}
+.nav-brand h1{font-family:var(--display);font-size:17px;line-height:1.3;color:var(--text);margin-top:6px}
+.nav-section{padding:6px 22px 4px;font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:10px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 22px;cursor:pointer;border-left:2px solid transparent;transition:all .15s;text-decoration:none;color:var(--muted);font-size:13px}
+.nav-item:hover{color:var(--text);background:var(--surface2)}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(155,46,43,.07)}
+.nav-week-num{font-family:var(--mono);font-size:10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;min-width:32px;text-align:center;flex-shrink:0;color:var(--muted)}
+.nav-item.active .nav-week-num{background:rgba(155,46,43,.15);border-color:var(--accent);color:var(--accent)}
+
+/* ─── main ───────────────────────────────────────────────── */
+main{padding:48px 44px;max-width:900px}
+@media(max-width:900px){main{padding:32px 24px}}
+
+/* ─── hero ───────────────────────────────────────────────── */
+.hero{margin-bottom:56px}
+.eyebrow{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:14px}
+.hero h2{font-family:var(--display);font-size:clamp(28px,4vw,42px);line-height:1.15;font-weight:800;color:var(--text);margin-bottom:16px}
+.hero h2 span{color:var(--accent)}
+.hero p{color:var(--muted);max-width:560px;line-height:1.75}
+.meta-pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.pill{font-family:var(--mono);font-size:11px;padding:5px 13px;border-radius:20px;border:1px solid var(--border);color:var(--muted)}
+.pill.accent{border-color:var(--accent);color:var(--accent);background:rgba(155,46,43,.07)}
+.pill.teal{border-color:var(--accent2);color:var(--accent2);background:rgba(109,30,28,.07)}
+
+/* ─── week cards ─────────────────────────────────────────── */
+.week-section{display:none;animation:fadeIn .2s ease}
+.week-section.visible{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.week-header{margin-bottom:28px}
+.week-tag{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em}
+.week-header h3{font-family:var(--display);font-size:26px;font-weight:800;color:var(--text);margin-top:6px;line-height:1.2}
+.week-header p{color:var(--muted);margin-top:10px;max-width:580px}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-bottom:16px}
+.card-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.card h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px}
+.card ul{padding-left:18px;color:var(--muted);font-size:13.5px;display:flex;flex-direction:column;gap:5px}
+.card ul li{line-height:1.6}
+.card p{color:var(--muted);font-size:13.5px;line-height:1.7}
+
+/* pattern badge */
+.pattern-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pbadge{font-size:12px;padding:4px 12px;border-radius:var(--badge-r);border:1px solid var(--border);color:var(--muted);font-family:var(--mono)}
+.pbadge.creational{border-color:#9B2E2B;color:#9B2E2B;background:rgba(155,46,43,.08)}
+.pbadge.structural{border-color:#c0403c;color:#c0403c;background:rgba(192,64,60,.07)}
+.pbadge.behavioral{border-color:#6d1e1c;color:#6d1e1c;background:rgba(109,30,28,.07)}
+
+/* ─── story example ──────────────────────────────────────── */
+.story-block{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-top:6px}
+.story-header{padding:10px 16px;background:rgba(155,46,43,.08);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--accent);display:flex;align-items:center;gap:8px}
+.story-header .dot{width:8px;height:8px;border-radius:50%}
+.story-header .dot.g{background:#22c55e}
+.story-header .dot.y{background:#f5a623}
+.story-header .dot.r{background:#f56565}
+
+.story-body{padding:16px;font-size:13px;line-height:1.75}
+.story-body .narrator{color:var(--muted);font-style:italic;margin-bottom:12px}
+.story-body code,pre{font-family:var(--mono)}
+
+pre{background:#1e0808;border:1px solid var(--border);border-radius:7px;padding:14px 16px;overflow-x:auto;font-size:12.5px;line-height:1.8;color:#f0dede;margin:10px 0}
+.kw{color:#e07070}
+.cl{color:#f5b8b8}
+.cm{color:#8c6060;font-style:italic}
+.st{color:#fbbf72}
+.nu{color:#f87171}
+
+.io-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+@media(max-width:600px){.io-grid{grid-template-columns:1fr}}
+.io-box{border-radius:7px;overflow:hidden}
+.io-label{padding:6px 12px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em}
+.io-label.in{background:rgba(155,46,43,.12);color:var(--accent)}
+.io-label.out{background:rgba(109,30,28,.15);color:var(--accent2)}
+.io-content{background:#1e0808;padding:10px 12px;font-family:var(--mono);font-size:12px;color:#f0dede;line-height:1.8;border:1px solid var(--border);border-top:none}
+
+/* ─── overview grid ──────────────────────────────────────── */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:40px}
+.ov-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;cursor:pointer;transition:all .15s}
+.ov-card:hover{border-color:var(--accent);background:var(--surface2)}
+.ov-week{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:6px}
+.ov-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.4}
+.ov-type{margin-top:8px}
+
+/* ─── nav toggle (mobile) ────────────────────────────────── */
+.mobile-nav-toggle{display:none;position:fixed;bottom:20px;right:20px;z-index:100;background:var(--accent);color:#fff;border:none;border-radius:50%;width:48px;height:48px;font-size:20px;cursor:pointer;box-shadow:0 4px 20px rgba(155,46,43,.4)}
+@media(max-width:780px){.mobile-nav-toggle{display:flex;align-items:center;justify-content:center}}
+</style>
+</head>
+<body>
+
+<div class="shell">
+<!-- ═══ SIDEBAR ═══════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="nav-brand">
+    <div class="course-code">ICT-2208</div>
+    <h1>OO Design Patterns</h1>
+  </div>
+  <div class="nav-section">Course</div>
+  <a class="nav-item active" onclick="show('home')" href="#">
+    <span class="nav-week-num">⌂</span> Overview
+  </a>
+
+  <div class="nav-section">Creational</div>
+  <a class="nav-item" onclick="show('w1')" href="#"><span class="nav-week-num">01</span>Intro & Singleton</a>
+  <a class="nav-item" onclick="show('w2')" href="#"><span class="nav-week-num">02</span>Factory Methods</a>
+  <a class="nav-item" onclick="show('w3')" href="#"><span class="nav-week-num">03</span>Builder & Prototype</a>
+
+  <div class="nav-section">Structural</div>
+  <a class="nav-item" onclick="show('w4')" href="#"><span class="nav-week-num">04</span>Adapter & Facade</a>
+  <a class="nav-item" onclick="show('w5')" href="#"><span class="nav-week-num">05</span>Composite & Bridge</a>
+  <a class="nav-item" onclick="show('w6')" href="#"><span class="nav-week-num">06</span>Decorator & Proxy</a>
+
+  <div class="nav-section">Behavioral</div>
+  <a class="nav-item" onclick="show('w7')" href="#"><span class="nav-week-num">07</span>Strategy & Command</a>
+  <a class="nav-item" onclick="show('w8')" href="#"><span class="nav-week-num">08</span>Observer & Iterator</a>
+  <a class="nav-item" onclick="show('w9')" href="#"><span class="nav-week-num">09</span>Template & State</a>
+  <a class="nav-item" onclick="show('w10')" href="#"><span class="nav-week-num">10</span>Chain & Mediator</a>
+
+  <div class="nav-section">Advanced</div>
+  <a class="nav-item" onclick="show('w11')" href="#"><span class="nav-week-num">11</span>Anti-patterns & Refactor</a>
+  <a class="nav-item" onclick="show('w12')" href="#"><span class="nav-week-num">12</span>Capstone Project</a>
+</nav>
+
+<!-- ═══ MAIN ═══════════════════════════════════════════════ -->
+<main>
+
+<!-- HOME -->
+<div id="home" class="week-section visible">
+  <div class="hero">
+    <div class="eyebrow">12-Week Course</div>
+    <h2>Object-Oriented<br/><span>Design Patterns</span></h2>
+    <p>Learn to write reusable, maintainable Java systems using the 23 Gang of Four patterns — with story-driven examples and real code every week.</p>
+    <div class="meta-pills">
+      <span class="pill accent">ICT-2208</span>
+      <span class="pill teal">Intermediate</span>
+      <span class="pill">12 Weeks</span>
+      <span class="pill">Java</span>
+      <span class="pill">GoF Patterns</span>
+    </div>
+  </div>
+
+  <div class="card-label">All Weeks</div>
+  <div class="overview-grid">
+    <div class="ov-card" onclick="show('w1')"><div class="ov-week">Week 01 · Creational</div><div class="ov-title">Intro & Singleton</div><div class="ov-type"><span class="pbadge creational">Singleton</span></div></div>
+    <div class="ov-card" onclick="show('w2')"><div class="ov-week">Week 02 · Creational</div><div class="ov-title">Factory Methods</div><div class="ov-type"><span class="pbadge creational">Factory</span><span class="pbadge creational" style="margin-left:4px">Abstract</span></div></div>
+    <div class="ov-card" onclick="show('w3')"><div class="ov-week">Week 03 · Creational</div><div class="ov-title">Builder & Prototype</div><div class="ov-type"><span class="pbadge creational">Builder</span><span class="pbadge creational" style="margin-left:4px">Prototype</span></div></div>
+    <div class="ov-card" onclick="show('w4')"><div class="ov-week">Week 04 · Structural</div><div class="ov-title">Adapter & Facade</div><div class="ov-type"><span class="pbadge structural">Adapter</span><span class="pbadge structural" style="margin-left:4px">Facade</span></div></div>
+    <div class="ov-card" onclick="show('w5')"><div class="ov-week">Week 05 · Structural</div><div class="ov-title">Composite & Bridge</div><div class="ov-type"><span class="pbadge structural">Composite</span><span class="pbadge structural" style="margin-left:4px">Bridge</span></div></div>
+    <div class="ov-card" onclick="show('w6')"><div class="ov-week">Week 06 · Structural</div><div class="ov-title">Decorator & Proxy</div><div class="ov-type"><span class="pbadge structural">Decorator</span><span class="pbadge structural" style="margin-left:4px">Proxy</span></div></div>
+    <div class="ov-card" onclick="show('w7')"><div class="ov-week">Week 07 · Behavioral</div><div class="ov-title">Strategy & Command</div><div class="ov-type"><span class="pbadge behavioral">Strategy</span><span class="pbadge behavioral" style="margin-left:4px">Command</span></div></div>
+    <div class="ov-card" onclick="show('w8')"><div class="ov-week">Week 08 · Behavioral</div><div class="ov-title">Observer & Iterator</div><div class="ov-type"><span class="pbadge behavioral">Observer</span><span class="pbadge behavioral" style="margin-left:4px">Iterator</span></div></div>
+    <div class="ov-card" onclick="show('w9')"><div class="ov-week">Week 09 · Behavioral</div><div class="ov-title">Template & State</div><div class="ov-type"><span class="pbadge behavioral">Template</span><span class="pbadge behavioral" style="margin-left:4px">State</span></div></div>
+    <div class="ov-card" onclick="show('w10')"><div class="ov-week">Week 10 · Behavioral</div><div class="ov-title">Chain & Mediator</div><div class="ov-type"><span class="pbadge behavioral">Chain</span><span class="pbadge behavioral" style="margin-left:4px">Mediator</span></div></div>
+    <div class="ov-card" onclick="show('w11')"><div class="ov-week">Week 11 · Advanced</div><div class="ov-title">Anti-patterns & Refactor</div><div class="ov-type"><span class="pbadge structural">Refactoring</span></div></div>
+    <div class="ov-card" onclick="show('w12')"><div class="ov-week">Week 12 · Capstone</div><div class="ov-title">Full System Design</div><div class="ov-type"><span class="pbadge behavioral">Project</span></div></div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 1 ════════════════════════════════════════════ -->
+<div id="w1" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 01 · Creational</div>
+    <h3>Introduction & Singleton Pattern</h3>
+    <p>Why patterns exist, the GoF classification, SOLID principles, and the Singleton — guaranteeing one instance across a system.</p>
+  </div>
+  <div class="card">
+    <div class="card-label">Topics</div>
+    <ul>
+      <li>History: Gang of Four, pattern categories (Creational / Structural / Behavioral)</li>
+      <li>SOLID principles review — why they motivate patterns</li>
+      <li>Singleton: lazy init, eager init, thread-safe double-checked locking</li>
+      <li>When Singleton is appropriate — and when it isn't</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-label">Pattern</div>
+    <div class="pattern-grid"><span class="pbadge creational">Singleton</span></div>
+  </div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Royal Vault"</div>
+    <div class="story-body">
+      <p class="narrator">A kingdom has one treasury. No matter which minister requests it, they must all get the same vault — there cannot be two.</p>
+<pre><span class="kw">public class</span> <span class="cl">RoyalVault</span> {
+    <span class="kw">private static volatile</span> <span class="cl">RoyalVault</span> instance;
+    <span class="kw">private int</span> goldCoins = <span class="nu">10_000</span>;
+
+    <span class="kw">private</span> RoyalVault() {}   <span class="cm">// no public constructor</span>
+
+    <span class="kw">public static</span> <span class="cl">RoyalVault</span> getInstance() {
+        <span class="kw">if</span> (instance == <span class="kw">null</span>) {
+            <span class="kw">synchronized</span> (<span class="cl">RoyalVault</span>.<span class="kw">class</span>) {
+                <span class="kw">if</span> (instance == <span class="kw">null</span>)
+                    instance = <span class="kw">new</span> <span class="cl">RoyalVault</span>();
+            }
+        }
+        <span class="kw">return</span> instance;
+    }
+
+    <span class="kw">public void</span> deposit(<span class="kw">int</span> coins) { goldCoins += coins; }
+    <span class="kw">public int</span>  balance()          { <span class="kw">return</span> goldCoins; }
+}
+
+<span class="cm">// --- Main.java ---</span>
+<span class="cl">RoyalVault</span> ministerA = <span class="cl">RoyalVault</span>.getInstance();
+<span class="cl">RoyalVault</span> ministerB = <span class="cl">RoyalVault</span>.getInstance();
+ministerA.deposit(<span class="nu">500</span>);
+System.out.println(ministerB.balance());
+System.out.println(ministerA == ministerB);</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">ministerA.deposit(500)</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">10500<br/>true</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 2 ════════════════════════════════════════════ -->
+<div id="w2" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 02 · Creational</div>
+    <h3>Factory Method & Abstract Factory</h3>
+    <p>Delegate object creation to subclasses; group families of related objects without specifying concrete classes.</p>
+  </div>
+  <div class="card">
+    <div class="card-label">Topics</div>
+    <ul>
+      <li>Factory Method — creator + product hierarchy</li>
+      <li>Abstract Factory — families of products (e.g. UI themes)</li>
+      <li>Comparing Factory vs new: Open/Closed Principle benefit</li>
+      <li>Using interfaces vs abstract classes as product types</li>
+    </ul>
+  </div>
+  <div class="card"><div class="card-label">Patterns</div><div class="pattern-grid"><span class="pbadge creational">Factory Method</span><span class="pbadge creational">Abstract Factory</span></div></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Weapon Forge"</div>
+    <div class="story-body">
+      <p class="narrator">A blacksmith's forge creates weapons. Elven forges craft bows; Dwarven forges craft axes. Client code orders a weapon without knowing how it's made.</p>
+<pre><span class="kw">interface</span> <span class="cl">Weapon</span> { <span class="cl">String</span> describe(); }
+
+<span class="kw">class</span> <span class="cl">Bow</span>  <span class="kw">implements</span> <span class="cl">Weapon</span> { <span class="kw">public</span> <span class="cl">String</span> describe(){ <span class="kw">return</span> <span class="st">"Elven Bow"</span>;   } }
+<span class="kw">class</span> <span class="cl">Axe</span>  <span class="kw">implements</span> <span class="cl">Weapon</span> { <span class="kw">public</span> <span class="cl">String</span> describe(){ <span class="kw">return</span> <span class="st">"Dwarven Axe"</span>; } }
+
+<span class="kw">abstract class</span> <span class="cl">Forge</span> {
+    <span class="kw">abstract</span> <span class="cl">Weapon</span> craft();          <span class="cm">// factory method</span>
+    <span class="kw">void</span> deliver() {
+        System.out.println(<span class="st">"Delivering: "</span> + craft().describe());
+    }
+}
+<span class="kw">class</span> <span class="cl">ElvenForge</span>  <span class="kw">extends</span> <span class="cl">Forge</span>  { <span class="cl">Weapon</span> craft(){ <span class="kw">return new</span> <span class="cl">Bow</span>(); } }
+<span class="kw">class</span> <span class="cl">DwarvenForge</span> <span class="kw">extends</span> <span class="cl">Forge</span>  { <span class="cl">Weapon</span> craft(){ <span class="kw">return new</span> <span class="cl">Axe</span>(); } }
+
+<span class="cm">// --- Main.java ---</span>
+<span class="cl">Forge</span> f1 = <span class="kw">new</span> <span class="cl">ElvenForge</span>();   f1.deliver();
+<span class="cl">Forge</span> f2 = <span class="kw">new</span> <span class="cl">DwarvenForge</span>(); f2.deliver();</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">ElvenForge → deliver()<br/>DwarvenForge → deliver()</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">Delivering: Elven Bow<br/>Delivering: Dwarven Axe</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 3 ════════════════════════════════════════════ -->
+<div id="w3" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 03 · Creational</div>
+    <h3>Builder & Prototype</h3>
+    <p>Builder constructs complex objects step by step. Prototype clones existing objects instead of rebuilding from scratch.</p>
+  </div>
+  <div class="card"><div class="card-label">Topics</div><ul><li>Builder: director, builder interface, concrete builders, fluent API</li><li>Prototype: shallow vs deep copy, Cloneable in Java</li><li>When to prefer Builder over telescoping constructors</li><li>Registry pattern with Prototype for object templates</li></ul></div>
+  <div class="card"><div class="card-label">Patterns</div><div class="pattern-grid"><span class="pbadge creational">Builder</span><span class="pbadge creational">Prototype</span></div></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Tavern Meal Order"</div>
+    <div class="story-body">
+      <p class="narrator">A customer orders a meal at a tavern step by step. The chef builds it only when the customer says "done". Another customer clones last night's special.</p>
+<pre><span class="kw">class</span> <span class="cl">Meal</span> {
+    <span class="cl">String</span> main, side, drink;
+    <span class="kw">public</span> <span class="cl">String</span> toString(){
+        <span class="kw">return</span> main + <span class="st">" + "</span> + side + <span class="st">" + "</span> + drink;
+    }
+}
+<span class="kw">class</span> <span class="cl">MealBuilder</span> {
+    <span class="kw">private final</span> <span class="cl">Meal</span> meal = <span class="kw">new</span> <span class="cl">Meal</span>();
+    <span class="kw">public</span> <span class="cl">MealBuilder</span> main(<span class="cl">String</span> m)  { meal.main  = m; <span class="kw">return this</span>; }
+    <span class="kw">public</span> <span class="cl">MealBuilder</span> side(<span class="cl">String</span> s)  { meal.side  = s; <span class="kw">return this</span>; }
+    <span class="kw">public</span> <span class="cl">MealBuilder</span> drink(<span class="cl">String</span> d) { meal.drink = d; <span class="kw">return this</span>; }
+    <span class="kw">public</span> <span class="cl">Meal</span> build() { <span class="kw">return</span> meal; }
+}
+
+<span class="cl">Meal</span> order = <span class="kw">new</span> <span class="cl">MealBuilder</span>()
+    .main(<span class="st">"Roast Chicken"</span>)
+    .side(<span class="st">"Bread"</span>)
+    .drink(<span class="st">"Ale"</span>)
+    .build();
+System.out.println(order);</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">main=Roast Chicken<br/>side=Bread, drink=Ale</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">Roast Chicken + Bread + Ale</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 4 ════════════════════════════════════════════ -->
+<div id="w4" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 04 · Structural</div>
+    <h3>Adapter & Facade</h3>
+    <p>Adapter translates one interface into another. Facade simplifies a complex subsystem behind a single entry point.</p>
+  </div>
+  <div class="card"><div class="card-label">Topics</div><ul><li>Adapter: object adapter vs class adapter</li><li>Real-world: legacy API wrapping, third-party library integration</li><li>Facade: hiding subsystem complexity, Principle of Least Knowledge</li><li>Comparing Adapter and Facade intent</li></ul></div>
+  <div class="card"><div class="card-label">Patterns</div><div class="pattern-grid"><span class="pbadge structural">Adapter</span><span class="pbadge structural">Facade</span></div></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Magic Translator"</div>
+    <div class="story-body">
+      <p class="narrator">A modern wizard speaks English, but the ancient spell book is in Latin. An Adapter translates on the fly so the wizard can cast spells without learning Latin.</p>
+<pre><span class="kw">interface</span> <span class="cl">Spell</span>       { <span class="kw">void</span> cast(); }
+<span class="kw">class</span> <span class="cl">LatinSpell</span>      { <span class="kw">void</span> incantare(){ System.out.println(<span class="st">"Ignis!"</span>); } }
+
+<span class="kw">class</span> <span class="cl">SpellAdapter</span> <span class="kw">implements</span> <span class="cl">Spell</span> {
+    <span class="kw">private final</span> <span class="cl">LatinSpell</span> latin;
+    <span class="cl">SpellAdapter</span>(<span class="cl">LatinSpell</span> l) { <span class="kw">this</span>.latin = l; }
+
+    <span class="kw">public void</span> cast() {
+        System.out.print(<span class="st">"[Adapter] Translating → "</span>);
+        latin.incantare();      <span class="cm">// delegates to legacy</span>
+    }
+}
+
+<span class="cm">// Wizard only knows Spell interface</span>
+<span class="cl">Spell</span> fireball = <span class="kw">new</span> <span class="cl">SpellAdapter</span>(<span class="kw">new</span> <span class="cl">LatinSpell</span>());
+fireball.cast();</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">fireball.cast()</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">[Adapter] Translating → Ignis!</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 5 ════════════════════════════════════════════ -->
+<div id="w5" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 05 · Structural</div>
+    <h3>Composite & Bridge</h3>
+    <p>Composite lets you treat individual objects and compositions uniformly. Bridge decouples abstraction from implementation.</p>
+  </div>
+  <div class="card"><div class="card-label">Topics</div><ul><li>Composite: leaf vs composite nodes, recursive tree operations</li><li>Use case: file systems, UI component trees, org charts</li><li>Bridge: abstraction hierarchy + implementation hierarchy</li><li>Bridge vs Adapter: design-time vs retrofit</li></ul></div>
+  <div class="card"><div class="card-label">Patterns</div><div class="pattern-grid"><span class="pbadge structural">Composite</span><span class="pbadge structural">Bridge</span></div></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Army Roster"</div>
+    <div class="story-body">
+      <p class="narrator">A general commands units: individual soldiers and squads. Either way, the order "march!" propagates uniformly down the tree.</p>
+<pre><span class="kw">interface</span> <span class="cl">Unit</span> { <span class="kw">void</span> march(); }
+
+<span class="kw">class</span> <span class="cl">Soldier</span> <span class="kw">implements</span> <span class="cl">Unit</span> {
+    <span class="cl">String</span> name;
+    <span class="cl">Soldier</span>(<span class="cl">String</span> n){ name = n; }
+    <span class="kw">public void</span> march(){ System.out.println(name + <span class="st">" marches."</span>); }
+}
+<span class="kw">class</span> <span class="cl">Squad</span> <span class="kw">implements</span> <span class="cl">Unit</span> {
+    <span class="kw">private</span> <span class="cl">List</span>&lt;<span class="cl">Unit</span>&gt; members = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;&gt;();
+    <span class="kw">void</span> add(<span class="cl">Unit</span> u){ members.add(u); }
+    <span class="kw">public void</span> march(){ members.forEach(<span class="cl">Unit</span>::march); }
+}
+
+<span class="cl">Squad</span> alpha = <span class="kw">new</span> <span class="cl">Squad</span>();
+alpha.add(<span class="kw">new</span> <span class="cl">Soldier</span>(<span class="st">"Aria"</span>));
+alpha.add(<span class="kw">new</span> <span class="cl">Soldier</span>(<span class="st">"Bran"</span>));
+
+<span class="cl">Squad</span> army = <span class="kw">new</span> <span class="cl">Squad</span>();
+army.add(alpha);
+army.add(<span class="kw">new</span> <span class="cl">Soldier</span>(<span class="st">"Cael"</span>));
+army.march();</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">army.march()</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">Aria marches.<br/>Bran marches.<br/>Cael marches.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 6 ════════════════════════════════════════════ -->
+<div id="w6" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 06 · Structural</div>
+    <h3>Decorator & Proxy</h3>
+    <p>Decorator adds responsibilities at runtime without subclassing. Proxy controls access to an object.</p>
+  </div>
+  <div class="card"><div class="card-label">Topics</div><ul><li>Decorator: wrapping chains, difference from inheritance</li><li>Java I/O streams as classic Decorator example</li><li>Proxy types: virtual, protection, remote, caching</li><li>Decorator vs Proxy intent distinction</li></ul></div>
+  <div class="card"><div class="card-label">Patterns</div><div class="pattern-grid"><span class="pbadge structural">Decorator</span><span class="pbadge structural">Proxy</span></div></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Enchanted Sword"</div>
+    <div class="story-body">
+      <p class="narrator">A plain sword can be enchanted with fire, then ice — each enchantment wraps the previous, stacking damage bonuses without changing the sword itself.</p>
+<pre><span class="kw">interface</span> <span class="cl">Sword</span>    { <span class="kw">int</span> damage(); }
+
+<span class="kw">class</span> <span class="cl">IronSword</span> <span class="kw">implements</span> <span class="cl">Sword</span> {
+    <span class="kw">public int</span> damage(){ <span class="kw">return</span> <span class="nu">10</span>; }
+}
+<span class="kw">abstract class</span> <span class="cl">Enchantment</span> <span class="kw">implements</span> <span class="cl">Sword</span> {
+    <span class="kw">protected</span> <span class="cl">Sword</span> wrapped;
+    <span class="cl">Enchantment</span>(<span class="cl">Sword</span> s){ wrapped = s; }
+}
+<span class="kw">class</span> <span class="cl">FireEnchant</span> <span class="kw">extends</span> <span class="cl">Enchantment</span> {
+    <span class="cl">FireEnchant</span>(<span class="cl">Sword</span> s){ <span class="kw">super</span>(s); }
+    <span class="kw">public int</span> damage(){ <span class="kw">return</span> wrapped.damage() + <span class="nu">5</span>; }
+}
+<span class="kw">class</span> <span class="cl">IceEnchant</span> <span class="kw">extends</span> <span class="cl">Enchantment</span> {
+    <span class="cl">IceEnchant</span>(<span class="cl">Sword</span> s){ <span class="kw">super</span>(s); }
+    <span class="kw">public int</span> damage(){ <span class="kw">return</span> wrapped.damage() + <span class="nu">3</span>; }
+}
+
+<span class="cl">Sword</span> s = <span class="kw">new</span> <span class="cl">IceEnchant</span>(<span class="kw">new</span> <span class="cl">FireEnchant</span>(<span class="kw">new</span> <span class="cl">IronSword</span>()));
+System.out.println(<span class="st">"Total damage: "</span> + s.damage());</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">IronSword + Fire + Ice</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">Total damage: 18</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 7 ════════════════════════════════════════════ -->
+<div id="w7" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 07 · Behavioral</div>
+    <h3>Strategy & Command</h3>
+    <p>Strategy swaps algorithms at runtime. Command encapsulates a request as an object, enabling undo/redo queues.</p>
+  </div>
+  <div class="card"><div class="card-label">Topics</div><ul><li>Strategy: context + strategy interface + concrete strategies</li><li>Replace conditionals with Strategy — Open/Closed in action</li><li>Command: invoker, command, receiver, undo stack</li><li>Macro commands, command queue, logging</li></ul></div>
+  <div class="card"><div class="card-label">Patterns</div><div class="pattern-grid"><span class="pbadge behavioral">Strategy</span><span class="pbadge behavioral">Command</span></div></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Travelling Merchant"</div>
+    <div class="story-body">
+      <p class="narrator">A merchant chooses how to sort his inventory based on market day: by price, by weight, or by name — the sorting strategy swaps without changing the cart.</p>
+<pre><span class="kw">interface</span> <span class="cl">SortStrategy</span> {
+    <span class="kw">void</span> sort(<span class="cl">List</span>&lt;<span class="cl">String</span>&gt; items);
+}
+<span class="kw">class</span> <span class="cl">AlphaSort</span> <span class="kw">implements</span> <span class="cl">SortStrategy</span> {
+    <span class="kw">public void</span> sort(<span class="cl">List</span>&lt;<span class="cl">String</span>&gt; items){
+        <span class="cl">Collections</span>.sort(items);
+    }
+}
+<span class="kw">class</span> <span class="cl">LengthSort</span> <span class="kw">implements</span> <span class="cl">SortStrategy</span> {
+    <span class="kw">public void</span> sort(<span class="cl">List</span>&lt;<span class="cl">String</span>&gt; items){
+        items.sort(<span class="cl">Comparator</span>.comparingInt(<span class="cl">String</span>::length));
+    }
+}
+<span class="kw">class</span> <span class="cl">MerchantCart</span> {
+    <span class="kw">private</span> <span class="cl">SortStrategy</span> strategy;
+    <span class="kw">void</span> setStrategy(<span class="cl">SortStrategy</span> s){ strategy = s; }
+    <span class="kw">void</span> display(<span class="cl">List</span>&lt;<span class="cl">String</span>&gt; items){
+        strategy.sort(items);
+        System.out.println(items);
+    }
+}
+<span class="cl">List</span>&lt;<span class="cl">String</span>&gt; goods = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;&gt;(<span class="cl">List</span>.of(<span class="st">"Silk"</span>,<span class="st">"Iron"</span>,<span class="st">"Gem"</span>));
+<span class="cl">MerchantCart</span> cart = <span class="kw">new</span> <span class="cl">MerchantCart</span>();
+cart.setStrategy(<span class="kw">new</span> <span class="cl">AlphaSort</span>());  cart.display(goods);
+cart.setStrategy(<span class="kw">new</span> <span class="cl">LengthSort</span>()); cart.display(goods);</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">[Silk, Iron, Gem]<br/>Strategy 1: Alpha<br/>Strategy 2: Length</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">[Gem, Iron, Silk]<br/>[Gem, Silk, Iron]</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 8 ════════════════════════════════════════════ -->
+<div id="w8" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 08 · Behavioral</div>
+    <h3>Observer & Iterator</h3>
+    <p>Observer notifies dependents on state change. Iterator provides a uniform traversal over any collection.</p>
+  </div>
+  <div class="card"><div class="card-label">Topics</div><ul><li>Observer: subject, observer list, push vs pull model</li><li>Java's built-in event listeners as Observer examples</li><li>Iterator: hasNext / next contract, custom iterators</li><li>Java Iterable and for-each sugar</li></ul></div>
+  <div class="card"><div class="card-label">Patterns</div><div class="pattern-grid"><span class="pbadge behavioral">Observer</span><span class="pbadge behavioral">Iterator</span></div></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Town Crier"</div>
+    <div class="story-body">
+      <p class="narrator">When the king makes an announcement, the town crier automatically notifies all registered citizens. No citizen needs to poll the palace.</p>
+<pre><span class="kw">interface</span> <span class="cl">Citizen</span>      { <span class="kw">void</span> hear(<span class="cl">String</span> news); }
+
+<span class="kw">class</span> <span class="cl">Palace</span> {
+    <span class="kw">private</span> <span class="cl">List</span>&lt;<span class="cl">Citizen</span>&gt; citizens = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;&gt;();
+    <span class="kw">void</span> register(<span class="cl">Citizen</span> c){ citizens.add(c); }
+    <span class="kw">void</span> announce(<span class="cl">String</span> msg){
+        citizens.forEach(c -> c.hear(msg));
+    }
+}
+
+<span class="cl">Palace</span> palace = <span class="kw">new</span> <span class="cl">Palace</span>();
+palace.register(news -> System.out.println(<span class="st">"Alice hears: "</span> + news));
+palace.register(news -> System.out.println(<span class="st">"Bob hears: "</span>   + news));
+palace.announce(<span class="st">"Festival tomorrow!"</span>);</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">announce("Festival tomorrow!")</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">Alice hears: Festival tomorrow!<br/>Bob hears: Festival tomorrow!</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 9 ════════════════════════════════════════════ -->
+<div id="w9" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 09 · Behavioral</div>
+    <h3>Template Method & State</h3>
+    <p>Template Method defines the skeleton of an algorithm; subclasses fill steps. State lets an object change behaviour when its internal state changes.</p>
+  </div>
+  <div class="card"><div class="card-label">Topics</div><ul><li>Template Method: Hollywood Principle ("don't call us")</li><li>Hook methods — optional overrides</li><li>State: context delegates to current state object</li><li>State vs giant switch-case, finite state machines</li></ul></div>
+  <div class="card"><div class="card-label">Patterns</div><div class="pattern-grid"><span class="pbadge behavioral">Template Method</span><span class="pbadge behavioral">State</span></div></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Hero's Quest"</div>
+    <div class="story-body">
+      <p class="narrator">Every quest follows the same skeleton: prepare → fight → claim reward. But elves prepare differently from warriors — the steps vary, not the skeleton.</p>
+<pre><span class="kw">abstract class</span> <span class="cl">Quest</span> {
+    <span class="kw">final void</span> undertake() {   <span class="cm">// template method</span>
+        prepare();
+        fight();
+        claimReward();
+    }
+    <span class="kw">abstract void</span> prepare();
+    <span class="kw">void</span> fight()  { System.out.println(<span class="st">"Fighting the dragon!"</span>); }
+    <span class="kw">void</span> claimReward(){ System.out.println(<span class="st">"Reward claimed."</span>); }
+}
+<span class="kw">class</span> <span class="cl">ElfQuest</span> <span class="kw">extends</span> <span class="cl">Quest</span> {
+    <span class="kw">void</span> prepare(){ System.out.println(<span class="st">"Elf: sharpens arrows."</span>); }
+}
+<span class="kw">class</span> <span class="cl">WarriorQuest</span> <span class="kw">extends</span> <span class="cl">Quest</span> {
+    <span class="kw">void</span> prepare(){ System.out.println(<span class="st">"Warrior: polishes armour."</span>); }
+}
+
+<span class="kw">new</span> <span class="cl">ElfQuest</span>().undertake();
+System.out.println(<span class="st">"---"</span>);
+<span class="kw">new</span> <span class="cl">WarriorQuest</span>().undertake();</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">ElfQuest.undertake()<br/>WarriorQuest.undertake()</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">Elf: sharpens arrows.<br/>Fighting the dragon!<br/>Reward claimed.<br/>---<br/>Warrior: polishes armour.<br/>Fighting the dragon!<br/>Reward claimed.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 10 ═══════════════════════════════════════════ -->
+<div id="w10" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 10 · Behavioral</div>
+    <h3>Chain of Responsibility & Mediator</h3>
+    <p>Chain passes a request along a handler chain until one handles it. Mediator centralises complex communication between objects.</p>
+  </div>
+  <div class="card"><div class="card-label">Topics</div><ul><li>Chain of Responsibility: handler base, passing to next, terminating</li><li>Use cases: middleware pipelines, logging levels, exception handlers</li><li>Mediator: reduces N-to-N coupling to N-to-1</li><li>Mediator vs Observer distinction</li></ul></div>
+  <div class="card"><div class="card-label">Patterns</div><div class="pattern-grid"><span class="pbadge behavioral">Chain of Responsibility</span><span class="pbadge behavioral">Mediator</span></div></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Castle Gate Guards"</div>
+    <div class="story-body">
+      <p class="narrator">A visitor approaches the castle. First the page checks rank, then the knight checks allegiance, then the king makes the final call — each guard passes up if they can't decide.</p>
+<pre><span class="kw">abstract class</span> <span class="cl">Guard</span> {
+    <span class="kw">protected</span> <span class="cl">Guard</span> next;
+    <span class="cl">Guard</span> setNext(<span class="cl">Guard</span> g){ next = g; <span class="kw">return</span> g; }
+    <span class="kw">abstract void</span> handle(<span class="kw">int</span> rank);
+}
+<span class="kw">class</span> <span class="cl">Page</span> <span class="kw">extends</span> <span class="cl">Guard</span> {
+    <span class="kw">void</span> handle(<span class="kw">int</span> r){
+        <span class="kw">if</span>(r < <span class="nu">2</span>) System.out.println(<span class="st">"Page lets in commoner."</span>);
+        <span class="kw">else if</span>(next != <span class="kw">null</span>) next.handle(r);
+    }
+}
+<span class="kw">class</span> <span class="cl">Knight</span> <span class="kw">extends</span> <span class="cl">Guard</span> {
+    <span class="kw">void</span> handle(<span class="kw">int</span> r){
+        <span class="kw">if</span>(r < <span class="nu">5</span>) System.out.println(<span class="st">"Knight admits noble."</span>);
+        <span class="kw">else if</span>(next != <span class="kw">null</span>) next.handle(r);
+    }
+}
+<span class="kw">class</span> <span class="cl">King</span> <span class="kw">extends</span> <span class="cl">Guard</span> {
+    <span class="kw">void</span> handle(<span class="kw">int</span> r){ System.out.println(<span class="st">"King receives dignitary."</span>); }
+}
+
+<span class="cl">Guard</span> gate = <span class="kw">new</span> <span class="cl">Page</span>();
+gate.setNext(<span class="kw">new</span> <span class="cl">Knight</span>()).setNext(<span class="kw">new</span> <span class="cl">King</span>());
+gate.handle(<span class="nu">1</span>);
+gate.handle(<span class="nu">4</span>);
+gate.handle(<span class="nu">9</span>);</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">rank=1<br/>rank=4<br/>rank=9</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">Page lets in commoner.<br/>Knight admits noble.<br/>King receives dignitary.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 11 ═══════════════════════════════════════════ -->
+<div id="w11" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 11 · Advanced</div>
+    <h3>Anti-patterns & Refactoring</h3>
+    <p>Recognise common design mistakes and systematically refactor toward clean pattern-based solutions.</p>
+  </div>
+  <div class="card"><div class="card-label">Topics</div><ul><li>God Object, Blob, Spaghetti Code, Golden Hammer</li><li>Shotgun Surgery, Lava Flow, Magic Numbers</li><li>Refactoring steps: extract class, introduce parameter object, replace conditional with polymorphism</li><li>Code smells catalogue (Fowler) and automated detection tools</li></ul></div>
+  <div class="card"><div class="card-label">Patterns</div><div class="pattern-grid"><span class="pbadge structural">Refactoring</span><span class="pbadge behavioral">Replace Conditional</span><span class="pbadge creational">Extract Class</span></div></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Story — "The Overstretched Innkeeper"</div>
+    <div class="story-body">
+      <p class="narrator">The Innkeeper does everything: cooks, cleans, charges, repairs — a God Object. We refactor by giving each responsibility to a dedicated class.</p>
+<pre><span class="cm">// ❌ BEFORE — God Object</span>
+<span class="kw">class</span> <span class="cl">Innkeeper</span> {
+    <span class="kw">void</span> cook()   { ... }
+    <span class="kw">void</span> clean()  { ... }
+    <span class="kw">void</span> charge() { ... }
+    <span class="kw">void</span> repair() { ... }
+}
+
+<span class="cm">// ✅ AFTER — Single Responsibility</span>
+<span class="kw">class</span> <span class="cl">Cook</span>    { <span class="kw">void</span> cook()   { System.out.println(<span class="st">"Meal ready."</span>);   } }
+<span class="kw">class</span> <span class="cl">Cleaner</span> { <span class="kw">void</span> clean()  { System.out.println(<span class="st">"Room clean."</span>);   } }
+<span class="kw">class</span> <span class="cl">Cashier</span> { <span class="kw">void</span> charge() { System.out.println(<span class="st">"Bill settled."</span>); } }
+
+<span class="kw">new</span> <span class="cl">Cook</span>().cook();
+<span class="kw">new</span> <span class="cl">Cleaner</span>().clean();
+<span class="kw">new</span> <span class="cl">Cashier</span>().charge();</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">Each class called once</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">Meal ready.<br/>Room clean.<br/>Bill settled.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEK 12 ═══════════════════════════════════════════ -->
+<div id="w12" class="week-section">
+  <div class="week-header">
+    <div class="week-tag">Week 12 · Capstone</div>
+    <h3>Full System Design Project</h3>
+    <p>Apply multiple patterns together to design and implement a cohesive mini-application from scratch.</p>
+  </div>
+  <div class="card"><div class="card-label">Project — "Realm Manager"</div>
+    <p>Design a turn-based kingdom simulation applying at minimum: Singleton (GameEngine), Factory (Unit creation), Observer (event log), Strategy (combat), Command (undo moves), Composite (army tree), Facade (GameAPI).</p>
+  </div>
+  <div class="card"><div class="card-label">Deliverables</div><ul><li>UML class diagram annotated with pattern names</li><li>Working Java implementation (≥ 5 patterns)</li><li>Justification doc: why each pattern was chosen</li><li>10-minute demo presentation</li></ul></div>
+  <div class="card"><div class="card-label">Assessment criteria</div><ul><li>Correct pattern intent and structure (40%)</li><li>Code quality: SOLID, clean naming, no anti-patterns (30%)</li><li>Interaction between patterns (20%)</li><li>Presentation clarity (10%)</li></ul></div>
+  <div class="story-block">
+    <div class="story-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Sample skeleton</div>
+    <div class="story-body">
+<pre><span class="cm">// Singleton + Facade together</span>
+<span class="kw">class</span> <span class="cl">GameEngine</span> {                      <span class="cm">// Singleton</span>
+    <span class="kw">private static</span> <span class="cl">GameEngine</span> instance;
+    <span class="kw">private</span> <span class="cl">EventLog</span>  log  = <span class="kw">new</span> <span class="cl">EventLog</span>();   <span class="cm">// Observer hub</span>
+    <span class="kw">private</span> <span class="cl">UnitFactory</span> factory = <span class="kw">new</span> <span class="cl">UnitFactory</span>(); <span class="cm">// Factory</span>
+
+    <span class="kw">public static</span> <span class="cl">GameEngine</span> get(){
+        <span class="kw">if</span>(instance==<span class="kw">null</span>) instance = <span class="kw">new</span> <span class="cl">GameEngine</span>();
+        <span class="kw">return</span> instance;
+    }
+    <span class="kw">public</span> <span class="cl">Unit</span> recruit(<span class="cl">String</span> type){
+        <span class="cl">Unit</span> u = factory.create(type);
+        log.broadcast(type + <span class="st">" recruited."</span>);
+        <span class="kw">return</span> u;
+    }
+}
+<span class="cm">// Main</span>
+<span class="cl">Unit</span> archer = <span class="cl">GameEngine</span>.get().recruit(<span class="st">"Archer"</span>);
+<span class="cl">Unit</span> mage   = <span class="cl">GameEngine</span>.get().recruit(<span class="st">"Mage"</span>);</pre>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label in">Input</div><div class="io-content">recruit("Archer")<br/>recruit("Mage")</div></div>
+        <div class="io-box"><div class="io-label out">Output</div><div class="io-content">Archer recruited.<br/>Mage recruited.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div><!-- .shell -->
+
+<script>
+function show(id){
+  document.querySelectorAll('.week-section').forEach(s=>s.classList.remove('visible'));
+  document.getElementById(id).classList.add('visible');
+  document.querySelectorAll('.nav-item').forEach(a=>a.classList.remove('active'));
+  const target = document.querySelector(`[onclick="show('${id}')"]`);
+  if(target) target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
