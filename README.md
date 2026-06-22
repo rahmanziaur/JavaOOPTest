@@ -1,5 +1,5 @@
 ## Liang Lecture Helps Website:
-https://rahmanziaur.github.io/JavaOOPTest/LiangLectures/liangweb.html
+https://rahmanziaur.github.io/Java/LiangLectures/liangweb.html
 
 # OOP CheatSheet
 https://introcs.cs.princeton.edu/java/11cheatsheet/
